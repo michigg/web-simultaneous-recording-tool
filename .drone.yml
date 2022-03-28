@@ -61,7 +61,7 @@ steps:
       repo: michigg/web-simultaneous-recording-tool
       auto_tag: true
       auto_tag_suffix: frontend
-      dockerfile: Dockerfile
+      dockerfile: frontend/Dockerfile
       context: frontend
     when:
       branch:
@@ -128,7 +128,7 @@ steps:
       repo: michigg/web-simultaneous-recording-tool
       auto_tag: true
       auto_tag_suffix: backend
-      dockerfile: Dockerfile
+      dockerfile: backend/Dockerfile
       context: backend
     when:
       branch:
