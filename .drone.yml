@@ -1,0 +1,177 @@
+---
+kind: pipeline
+type: docker
+name: frontend
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+  - name: install
+    image: node:latest
+    commands:
+      - cd frontend
+      - yarn ci
+
+  - name: lint
+    image: node:latest
+    commands:
+      - cd frontend
+      - yarn lint
+      - yarn lint:markup
+    depends_on:
+      - install
+
+  - name: unit-test
+    image: node:latest
+    commands:
+      - cd frontend
+      - yarn test --ci --coverage
+    depends_on:
+      - lint
+
+  - name: code-analysis
+    image: aosapps/drone-sonar-plugin
+    settings:
+      sonar_host:
+        from_secret: sonar_host
+      sonar_token:
+        from_secret: sonar_token
+      level: DEBUG
+      showProfiling: true
+    depends_on:
+      - unit-test
+
+  - name: build
+    image: node:latest
+    commands:
+      - cd frontend
+      - yarn build
+    depends_on:
+      - code-analysis
+
+  - name: deploy
+    image: plugins/docker
+    settings:
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      target: production-stage
+      repo: michigg/web-simultaneous-recording-tool
+      auto_tag: true
+      auto_tag_suffix: frontend
+      dockerfile: Dockerfile
+      context: frontend
+    when:
+      branch:
+        - master
+      event:
+        - tag
+        - push
+    depends_on:
+      - build
+
+  - name: notify
+    image: plugins/matrix
+    settings:
+      homeserver:
+        from_secret: matrix_homeserver
+      roomid:
+        from_secret: matrix_roomid
+      userid:
+        from_secret: matrix_userid
+      accesstoken:
+        from_secret: matrix_accesstoken
+      template: >
+        {{#success build.status}}
+        ✅ {{repo.owner}}/{{repo.name}}  {{build.number}}
+        {{else}}
+        ❌ {{repo.owner}}/{{repo.name}} {{build.number}}
+        {{/success}}
+        depends_on:
+        - deploy
+    when:
+      status:
+        - success
+        - failure
+    depends_on:
+      - deploy
+      - build
+
+trigger:
+  event:
+    - cron
+    - custom
+    - push
+    - pull_request
+    - tag
+
+---
+kind: pipeline
+type: docker
+name: backend
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+  - name: deploy
+    image: plugins/docker
+    settings:
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      target: production-stage
+      repo: michigg/web-simultaneous-recording-tool
+      auto_tag: true
+      auto_tag_suffix: backend
+      dockerfile: Dockerfile
+      context: backend
+    when:
+      branch:
+        - master
+      event:
+        - tag
+        - push
+    depends_on:
+      - build
+
+  - name: notify
+    image: plugins/matrix
+    settings:
+      homeserver:
+        from_secret: matrix_homeserver
+      roomid:
+        from_secret: matrix_roomid
+      userid:
+        from_secret: matrix_userid
+      accesstoken:
+        from_secret: matrix_accesstoken
+      template: >
+        {{#success build.status}}
+        ✅ {{repo.owner}}/{{repo.name}}  {{build.number}}
+        {{else}}
+        ❌ {{repo.owner}}/{{repo.name}} {{build.number}}
+        {{/success}}
+        depends_on:
+        - deploy
+    when:
+      status:
+        - success
+        - failure
+    depends_on:
+      - deploy
+      - build
+
+trigger:
+  event:
+    - cron
+    - custom
+    - push
+    - pull_request
+    - tag
+

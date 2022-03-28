@@ -1,0 +1,16 @@
+@startuml
+actor Human
+participant Device1
+participant Device2
+participant Backend
+
+Human --> Device1: start analysis
+Device1 --> Backend: start_analysis(config)
+Backend --> Device1: start_measurement(config)
+Backend --> Device2: start_measurement(config)
+Device1 --> Backend: finished(result)
+Device2 --> Backend: finished(result)
+Backend --> Device1: update_result(file_names)
+Backend --> Device2: update_result(file_names)
+Device1 --> Human: displays results
+@enduml

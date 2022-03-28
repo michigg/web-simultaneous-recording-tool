@@ -1,0 +1,18 @@
+version: "3"
+services:
+  backend:
+    image: audio-test-backend:1
+    build: .
+    volumes:
+      - './results:/app/results'
+    environment:
+      FLASK_DEBUG: 1
+      FLASK_ENV: development
+      FLASK_APP: main.py
+    ports:
+      - '5000:5000'
+
+  redis:
+    image: redis:2
+    ports:
+      - 6379:6379

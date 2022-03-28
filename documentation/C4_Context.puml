@@ -1,0 +1,16 @@
+@startuml C4_Elements
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+System_Boundary(frontend, "Frontend") {
+    System(frontendApp, "Web Application", "Vue3 Web Application using Vite")
+}
+
+System_Boundary(backend, "Backend") {
+    System(backendServer, "Backend Server", "Flask Application using SocketIO")
+    System(frontendServer, "Frontend Server", "Node Server")
+}
+
+Rel(frontendApp, backendServer, "Sends Analyis Data", "WebSockets")
+Rel(frontendServer, frontendApp, "Delivers Web Page", "HTTPS")
+Rel(backendServer, frontendApp, "Trigger Measurement", "WebSockets")
+@enduml

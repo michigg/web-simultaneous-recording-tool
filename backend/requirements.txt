@@ -1,0 +1,4 @@
+Flask==2.0.2
+Flask-SocketIO==5.1.1
+simple-websocket==0.4.0
+Werkzeug==2.0.2
