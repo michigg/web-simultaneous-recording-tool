@@ -65,7 +65,7 @@ steps:
       context: frontend
     when:
       branch:
-        - master
+        - main
       event:
         - tag
         - push
@@ -132,7 +132,7 @@ steps:
       context: backend
     when:
       branch:
-        - master
+        - main
       event:
         - tag
         - push
