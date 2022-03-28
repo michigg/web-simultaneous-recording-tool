@@ -19,7 +19,6 @@ steps:
     commands:
       - cd frontend
       - yarn lint
-      - yarn lint:markup
     depends_on:
       - install
 
@@ -137,8 +136,6 @@ steps:
       event:
         - tag
         - push
-    depends_on:
-      - build
 
   - name: notify
     image: plugins/matrix
