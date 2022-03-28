@@ -15,11 +15,10 @@
 <script lang="ts" setup>
   import { computed } from 'vue'
 
-  // eslint-disable-next-line no-undef
   const props = defineProps<{
-    modelValue?: string | number | undefined
+    modelValue?: unknown | undefined
     id: string
-    options: Array<string> | Array<{ title: string }>
+    options: Array<string> | Array<{ title: string; value: unknown }>
     label: string
   }>()
 
@@ -34,7 +33,7 @@
     }
   })
   const emit = defineEmits<{
-    (e: 'update:modelValue', value: string | number | undefined): void
+    (e: 'update:modelValue', value: unknown): void
   }>()
   const localValue = computed({
     get: () => props.modelValue,

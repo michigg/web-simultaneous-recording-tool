@@ -1,6 +1,6 @@
 <script setup lang="ts">
   defineProps<{
-    inputDevice: MediaDeviceInfo
+    inputDevice: MediaDeviceInfo | undefined
     isRecording: boolean
     isReady: boolean
     userCount: number
