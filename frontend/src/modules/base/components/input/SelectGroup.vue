@@ -3,10 +3,10 @@
     <select :id="id" v-model="localValue" v-bind="$attrs">
       <option
         v-for="option in localOptions"
-        :key="option.title || option"
-        :value="option.value || option"
+        :key="getTitle(option)"
+        :value="getValue(option)"
       >
-        {{ option.title || option }}
+        {{ getTitle(option) }}
       </option>
     </select>
     <label :for="id">{{ label }}</label>
@@ -39,6 +39,18 @@
     get: () => props.modelValue,
     set: (value) => emit('update:modelValue', value),
   })
+  const getTitle = (option: string | { title: string; value: unknown }) => {
+    if (typeof option === 'string') {
+      return option
+    }
+    return option.title
+  }
+  const getValue = (option: string | { title: string; value: unknown }) => {
+    if (typeof option === 'string') {
+      return option
+    }
+    return option.value
+  }
 </script>
 
 <style scoped>

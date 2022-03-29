@@ -19,6 +19,7 @@ steps:
     commands:
       - cd frontend
       - yarn lint
+      - yarn lint:markup
     depends_on:
       - install
 
