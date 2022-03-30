@@ -1,7 +1,9 @@
 # Simultaneous Recording Tool For Web
 [![Build Status](https://github.drone.michigg.de/api/badges/michigg/web-simultaneous-recording-tool/status.svg?ref=refs/heads/main)](https://github.drone.michigg.de/michigg/web-simultaneous-recording-tool)
 
-This project was an artefact from a master thesis process. It was required to record audio with multiple smartphones at the same time.
+This project was created during a master thesis. 
+
+It was required to record audio with multiple smartphones at the same time.
 This directory includes all contents that are required to build and start the simultaneously recording tool. It also includes python scripts to analyse the recorded sound data thereafter. 
 
 ## Repository Structure
